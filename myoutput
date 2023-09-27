@@ -1,0 +1,45 @@
+
+"These are the CS481 test cases for Assn3-23" 
+"These are the CS481 test cases for Assn3-23" 
+(INTERSECT '(426) '(2 A 30 6)) 
+NIL 
+(INTERSECT '(5 A J 4 C) '(B K 4 J 5)) 
+(5 J 4) 
+(INTERSECT '(A B R F E) '(B R F E A)) 
+(A B R F E) 
+(REMOVE_DUPLICATES '(3 5 A H 6 4 A 5 7 5)) 
+(3 H 6 4 A 7 5) 
+(REMOVE_DUPLICATES '(7 F 4 F 7 D D F)) 
+(4 7 D F) 
+(REMOVE_DUPLICATES '(7 F 4 8 C D)) 
+(7 F 4 8 C D) 
+(GET_DISTANCE "septer" "venus") 
+5402 
+(GET_DISTANCE "mars" "venus") 
+3860 
+(GET_DISTANCE "mars" "urie") 
+2772 
+(GET_PLANETS_BY_MEANS "mars" 'ROCKET) 
+("venus" "septer" "aria") 
+(GET_PLANETS_BY_MEANS "mars" 'TRANSPORTER) 
+("septer" "pitts" "pratt") 
+(GET_PLANETS_BY_MEANS "roan" 'LASER) 
+("venus") 
+(GET_PLANETS_BY_MEANS "bernar" 'LASER) 
+("crent" "durant") 
+(GET_PLANETS_BY_MEANS "bernar" 'ROCKET) 
+("baltic" "venus") 
+(CONSTRUCT_ACTION_LIST "baggor") 
+((30 "baggor" "crent" ROCKET) (83 "baggor" "erant" ROCKET)) 
+(CONSTRUCT_ACTION_LIST "mars") 
+((2111 "mars" "septer" TRANSPORTER) (3158 "mars" "pitts" TRANSPORTER)
+ (2486 "mars" "pratt" TRANSPORTER) (3860 "mars" "venus" ROCKET)
+ (2111 "mars" "septer" ROCKET) (2150 "mars" "aria" ROCKET)) 
+(CONSTRUCT_ACTION_LIST "bernar") 
+((1315 "bernar" "crent" LASER) (1291 "bernar" "durant" LASER)
+ (1519 "bernar" "baltic" ROCKET) (4806 "bernar" "venus" ROCKET)) 
+(CONSTRUCT_ACTION_LIST "roan") 
+((4472 "roan" "venus" LASER) (302 "roan" "baltic" TRANSPORTER)
+ (138 "roan" "sumver" TRANSPORTER) (1016 "roan" "westal" ROCKET)
+ (302 "roan" "baltic" ROCKET) (2651 "roan" "aria" ROCKET)) 
+DONE 

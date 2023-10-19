@@ -303,7 +303,7 @@
 
 
 
-parent - The node that is the predecessor of this node on a minimal 
+;parent - The node that is the predecessor of this node on a minimal 
 ;           cost path from planet-start to the state represented by the node.
 ;  action - The action, such as ("mars" "venus" <method>) that was used to get
 ;           from the previous planet to the planet represented by the node,
@@ -325,13 +325,17 @@ parent - The node that is the predecessor of this node on a minimal
   ; create node with the appropriate properties
   ; return the created node.
   ;(break "in create_node")
-  (put (intern (concat "Node-" planet)) 'parent parent)
-  (put (intern (concat "Node-" planet)) 'arc-cost arc-cost)
-  (put (intern (concat "Node-" planet)) 'weight weight)
-  (put (intern (concat "Node-" planet)) 'cost-of-short-path cost-of-short-path)
-  (put (intern (concat "Node-" planet)) 'action action)
-  (put (intern (concat "Node-" planet)) 'est-goal est-goal)
-  (put (intern (concat "Node-" planet)) 'goal-planet goal-planet)
+  (let* ((node (intern (concatenate 'string "Node-" 'planet))))
+    (setf (get node 'parent) 'parent)
+    (setf (get node 'action) 'action)
+    (setf (get node 'arc-cost) 'arc-cost)
+    (setf (get node 'num-stops) 0)
+    (setf (get node 'package-weight) 'weight)
+    (setf (get node 'cost-best-path-to-state) 'cost-of-short-path)
+    (setf (get node 'cost-estimate-state-to-goal) 'est-goal)
+    (setf (get node 'cost-estimate-start-to-goal) 'goal-planet)
+    (setf (get node 'state) 'planet)
+    node)
 )
 
 (defun update_node_on_open_list 

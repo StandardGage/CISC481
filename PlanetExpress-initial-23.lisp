@@ -286,7 +286,15 @@
 ; return the modified open-closed
 ; YOU MUST WRITE THIS FUNCTION
 ;(break "entering enter_node_on_open_list")
-  )
+    (let ((open-list (get open-closed 'open-list))
+          (f-val (get n 'cost-estimate-start-to-goal)))
+      (defun insert_elt (k lst)
+        (cond ((null lst) (list n))
+        ((<= k (get (car lst) 'cost-estimate-start-to-goal)) (cons n lst))
+        (t (cons (car lst) (insert_elt k (cdr lst))))))
+        (setf (get open-closed 'open-list) (insert_elt f-val open-list))
+        open-closed)
+)
 
 
 (defun adjust_open_list (n open)

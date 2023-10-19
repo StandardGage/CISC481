@@ -267,15 +267,16 @@
 )
 
 
-
-
 (defun state_on (state lst)
 ; state is a string giving the name of the planet that is the state
 ; lst is an open or closed list
 ; return true if a node on lst has this planet as its state
 ; YOU MUST WRITE THIS FUNCTION
+  (cond ((null lst) nil)
+        ((equal state (get (eval (car lst)) 'state)) t)
+        (t (state_on state (cdr lst))))
 )
-       
+
 (defun enter_node_on_open_list (n open-closed)
 ; n is a node
 ; the value of open-closed is a symbol with properties 'open-list and 'closed-list
@@ -283,7 +284,9 @@
 ; return the modified open-closed
 ; YOU MUST WRITE THIS FUNCTION
 ;(break "entering enter_node_on_open_list")
-  )
+  
+)
+
 
 
 (defun adjust_open_list (n open)
@@ -298,29 +301,38 @@
 ; YOU MUST WRITE THIS FUNCTION
 )
 
+
+
+parent - The node that is the predecessor of this node on a minimal 
+;           cost path from planet-start to the state represented by the node.
+;  action - The action, such as ("mars" "venus" <method>) that was used to get
+;           from the previous planet to the planet represented by the node,
+;           where <method> is either TRANSPORTER, LASER, or ROCKET
+;  arc-cost - the cost of the action that was used to get from the previous
+;             planet to the planet represented by the node
+;  num-stops - the number of stops on this path
+; package-weight - the weight of the package being transported
+;  cost-best-path-to state - The cost of the best known path from planet-start 
+;           to the planet represented by the node.
+;  cost-estimate-state-to-goal - The estimate of the cost to a goal from node
+;  cost-estimate-start-to-goal - The overall estimate of the cost from 
+;           planet-start to planet-goal through node
+;  state - The string giving the name of the planet in the search space
+;          For example, the node |Node-mars| will have "mars" as its
+;          state property 
 (defun create_node 
   (planet weight arc-cost parent cost-of-short-path action est-goal goal-planet)
   ; create node with the appropriate properties
   ; return the created node.
   ;(break "in create_node")
-(let ((node (intern (concatenate 'string 
-                                 "Node-"
-				 planet
-                                 ))))
-  (setf (get node 'state) planet)
-  (setf (get node 'num-stops)
-	(cond ((null action) 0)
-	      (t (+ 1 (get parent 'num-stops)))))
-  (setf (get node 'package-weight) weight)
-  (setf (get node 'arc-cost) arc-cost)
-  (setf (get node  'parent) parent)
-  (setf (get node 'action) action)
-  (setf (get  node 'cost-best-path-to-state) cost-of-short-path)
-  (setf (get node 'cost-estimate-state-to-goal)
-	(funcall est-goal planet goal-planet )) 
-  (setf (get  node `cost-estimate-start-to-goal)
-        (+ cost-of-short-path (get node 'cost-estimate-state-to-goal)))
-  node))
+  (put (intern (concat "Node-" planet)) 'parent parent)
+  (put (intern (concat "Node-" planet)) 'arc-cost arc-cost)
+  (put (intern (concat "Node-" planet)) 'weight weight)
+  (put (intern (concat "Node-" planet)) 'cost-of-short-path cost-of-short-path)
+  (put (intern (concat "Node-" planet)) 'action action)
+  (put (intern (concat "Node-" planet)) 'est-goal est-goal)
+  (put (intern (concat "Node-" planet)) 'goal-planet goal-planet)
+)
 
 (defun update_node_on_open_list 
   (n parent arccost successor-fn cost-of-short-path action open-closed )
@@ -370,5 +382,7 @@
 ;    between the planets  
 ; YOU MUST WRITE THIS FUNCTION
   ;(break "entering get_estimate_cost_to_goal_PE")
+  50
+
 )
 

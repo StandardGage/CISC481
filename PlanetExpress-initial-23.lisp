@@ -296,9 +296,22 @@
         open-closed)
 )
 
+(defun remove_elt (k lst)
+    (cond ((null lst) nil)
+        ((eq (car lst) k) (remove_elt k (cdr lst)))
+        (t (cons (car lst) (remove_elt k (cdr lst))))
+    )    
+)
+
+(defun insert_elt (k lst)
+    (cond ((null lst) (list k))
+        ((<= (get (eval k) 'cost-estimate-start-to-goal) (get (eval(car lst)) 'cost-estimate-start-to-goal)) (cons k lst))
+        (t (cons (car lst) (insert_elt k (cdr lst))))
+    )
+)
 
 (defun adjust_open_list (n open)
-;(break "entering adjust_open_list")
+(break "entering adjust_open_list")
 ; n is a node
 ; open is an open list of nodes 
 ; make sure that n is in its proper position on the open list, and if not
@@ -307,18 +320,8 @@
 ;   path to it may have been found, thereby changing its f value
 ; return the revised open list
 ; YOU MUST WRITE THIS FUNCTION
-  (defun remove_n (n open)
-    (cond ((null open) nil)
-      ((equal (car open) n) (cdr open))
-      (t (cons (car open) (remove_n n (cdr open)))))
-  )
-  (defun insert_n (n open)
-    (cond ((null open) (list n))
-      ((<= (get n 'cost-estimate-start-to-goal) (get (car open) 'cost-estimate-start-to-goal)) (cons n open))
-      (t (cons (car open) (insert_n n (cdr open))))
-    )
-  )
-  (insert_n n (remove_n n open))
+
+  (insert_n (eval n) (remove_n (eval n) open))
 )
 
 (defun create_node 

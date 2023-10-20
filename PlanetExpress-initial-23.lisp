@@ -361,14 +361,19 @@
 ; YOU MUST WRITE THIS FUNCTION
   
 )
-    
+
 (defun get_path_and_total_cost (node)
 ; node is a node in the graph
 ; return a list consisting of two elements: the path (in terms of actions) 
 ;    that was taken to get to node and the cost of that path
 ; YOU MUST WRITE THIS FUNCTION
-
-)
+  (cond
+   ((null node) (list '() 0))  ; base case: if the node is null, we've reached the root
+   (t (let ((result (get_path_and_total_cost (get node 'parent)))  ; recursive call to get path and cost for parent
+            (action (get node 'action))  ; action to reach this node
+            (cost (get node 'cost)))  ; cost to reach this node
+        (list (append (car result) (list action))  ; append this action to the path
+              (+ (car (cdr result)) cost))))))  ; add this node's cost to the total
 
 
 (defun get_successors_PE (node )
@@ -396,6 +401,15 @@
 ;    between the planets  
 ; YOU MUST WRITE THIS FUNCTION
   ;(break "entering get_estimate_cost_to_goal_PE")
-  50
+  (let* ((planet1-symbol (intern planet))
+         (planet2-symbol (intern goal-planet))
+         (x1 (get planet1-symbol 'x-coord))
+         (y1 (get planet1-symbol 'y-coord))
+         (z1 (get planet1-symbol 'z-coord))
+         (x2 (get planet2-symbol 'x-coord))
+         (y2 (get planet2-symbol 'y-coord))
+         (z2 (get planet2-symbol 'z-coord))
+         (distance (round (sqrt (+ (expt (- x2 x1) 2) (expt (- y2 y1) 2) (expt (- z2 z1) 2))))))
+    distance)
 )
 

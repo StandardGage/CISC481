@@ -310,6 +310,8 @@
     )
 )
 
+
+; needs fixing
 (defun adjust_open_list (n open)
 (break "entering adjust_open_list")
 ; n is a node

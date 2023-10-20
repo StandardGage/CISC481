@@ -307,6 +307,18 @@
 ;   path to it may have been found, thereby changing its f value
 ; return the revised open list
 ; YOU MUST WRITE THIS FUNCTION
+  (defun remove_n (n open)
+    (cond ((null open) nil)
+      ((equal (car open) n) (cdr open))
+      (t (cons (car open) (remove_n n (cdr open)))))
+  )
+  (defun insert_n (n open)
+    (cond ((null open) (list n))
+      ((<= (get n 'cost-estimate-start-to-goal) (get (car open) 'cost-estimate-start-to-goal)) (cons n open))
+      (t (cons (car open) (insert_n n (cdr open))))
+    )
+  )
+  (insert_n n (remove_n n open))
 )
 
 (defun create_node 

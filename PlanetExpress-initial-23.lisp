@@ -275,7 +275,7 @@
 ; return true if a node on lst has this planet as its state
 ; YOU MUST WRITE THIS FUNCTION
 (cond ((null lst) nil)
-        ((equal state (get (eval (car lst)) 'state)) t)
+        ((equal state (get (car lst) 'state)) t)
         (t (state_on state (cdr lst))))
 )
        
@@ -296,24 +296,8 @@
         open-closed)
 )
 
-(defun remove_elt (k lst)
-    (cond ((null lst) nil)
-        ((eq (car lst) k) (remove_elt k (cdr lst)))
-        (t (cons (car lst) (remove_elt k (cdr lst))))
-    )    
-)
-
-(defun insert_elt (k lst)
-    (cond ((null lst) (list k))
-        ((<= (get (eval k) 'cost-estimate-start-to-goal) (get (eval(car lst)) 'cost-estimate-start-to-goal)) (cons k lst))
-        (t (cons (car lst) (insert_elt k (cdr lst))))
-    )
-)
-
-
-; needs fixing
 (defun adjust_open_list (n open)
-(break "entering adjust_open_list")
+;(break "entering adjust_open_list")
 ; n is a node
 ; open is an open list of nodes 
 ; make sure that n is in its proper position on the open list, and if not
@@ -322,8 +306,20 @@
 ;   path to it may have been found, thereby changing its f value
 ; return the revised open list
 ; YOU MUST WRITE THIS FUNCTION
+  (defun remove_elt (k lst)
+    (cond ((null lst) nil)
+        ((eq (car lst) k) (remove_elt k (cdr lst)))
+        (t (cons (car lst) (remove_elt k (cdr lst))))
+    )    
+  )
+  (defun insert_elt (k lst)
+      (cond ((null lst) (list k))
+          ((<= (get k 'cost-estimate-start-to-goal) (get (car lst) 'cost-estimate-start-to-goal)) (cons k lst))
+          (t (cons (car lst) (insert_elt k (cdr lst))))
+      )
+  )
 
-  (insert_n (eval n) (remove_n (eval n) open))
+  (insert_elt n (remove_elt n open))
 )
 
 (defun create_node 
@@ -369,13 +365,10 @@
 ; return a list consisting of two elements: the path (in terms of actions) 
 ;    that was taken to get to node and the cost of that path
 ; YOU MUST WRITE THIS FUNCTION
-  (cond
-   ((null node) (list '() 0))  ; base case: if the node is null, we've reached the root
-   (t (let ((result (get_path_and_total_cost (get node 'parent)))  ; recursive call to get path and cost for parent
-            (action (get node 'action))  ; action to reach this node
-            (cost (get node 'cost)))  ; cost to reach this node
-        (list (append (car result) (list action))  ; append this action to the path
-              (+ (car (cdr result)) cost))))))  ; add this node's cost to the total
+  (cond ((null node) 0)
+        (t (+ (get node 'arc-cost) (get_path_and_total_cost (get node 'parent)))))
+  
+)  ; add this node's cost to the total
 
 
 (defun get_successors_PE (node )

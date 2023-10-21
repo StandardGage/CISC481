@@ -357,8 +357,13 @@
   ; return the modified open-closed 
 ; revise_node_on_open_list should call your function adjust_open_list
 ; YOU MUST WRITE THIS FUNCTION
-  
+(setf (get n 'parent) parent)
+(setf (get n 'arc-cost) arccost)
+(setf (get n 'cost-best-to-state) cost-of-short-path)
+(setf (get n 'action) action)
+(adjust_open_list n open-closed)
 )
+;-- ASK ABOUT SUCCESSOR FN
 
 (defun get_path_and_total_cost (node)
 ; node is a node in the graph
@@ -369,17 +374,40 @@
         (t (list (cons (get node 'action) (car (get_path_and_total_cost (get node 'parent)))) (+ (get node 'arc-cost) (cadr (get_path_and_total_cost (get node 'parent)))))))
   
 )  ; add this node's cost to the total
+; -- ASK ABOUT FORMATTING
 
 
-(defun get_successors_PE (node )
+(defun get_successors_PE (node &optional (next-planet-list (get (intern (get node 'state)) 'next-planet)))
 ; node is a node 
 ; return a list of the successors of the node, with each successor given as
 ;   a 4-tuple of the form (arc-cost current-planet next-planet means), such as 
 ;   (cost "mars" "venus" ROCKET) 
 ; YOU MUST WRITE THIS FUNCTION
 ;(break "in get_successors_PE")
+  (cond
+    ((null next-planet-list) nil) ; Base case: if the list is empty, return nil
+    ; Create an action tuple for the first planet in the next-planet list
+    (t (cons `(,(get_cost (get node 'state) (caar next-planet-list) (cadar next-planet-list) (get node 'package-weight) (get node 'num-stops)) ,(get node 'state) ,(caar next-planet-list) ,(cadar next-planet-list)) 
+             (get_successors_pe node (cdr next-planet-list))))
   )
-    
+)
+; -- make sure function def can be changed
+
+
+(defun get_cost (planet goal-planet means weight stops)
+  (let* ((planet1 (intern planet))
+         (planet2 (intern goal-planet))
+         (distance (get_estimate_cost_to_goal_pe planet goal-planet))
+  )
+    (cond ((equal means 'LASER) (+ (* 1000 weight) distance))
+          ((equal means 'ROCKET) (+ (* 75 stops) (* 10 distance) 500))
+          ((equal means 'TRANSPORTER) (+ (* 20 weight) (* 15 distance))))
+  )
+)
+; -- ask about why rounding is needed? 
+; -- needs testing
+
+
 
 (defun goal_test_PE? (node goal-planet)
 ; node is a node and goal-planet is a string giving the

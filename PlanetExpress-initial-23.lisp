@@ -365,8 +365,8 @@
 ; return a list consisting of two elements: the path (in terms of actions) 
 ;    that was taken to get to node and the cost of that path
 ; YOU MUST WRITE THIS FUNCTION
-  (cond ((null node) 0)
-        (t (+ (get node 'arc-cost) (get_path_and_total_cost (get node 'parent)))))
+  (cond ((null node) (list 0))
+        (t (list (cons (get node 'action) (car (get_path_and_total_cost (get node 'parent)))) (+ (get node 'arc-cost) (cadr (get_path_and_total_cost (get node 'parent)))))))
   
 )  ; add this node's cost to the total
 

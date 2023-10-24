@@ -265,8 +265,7 @@
 ;   on open and closed lists
 ; ONLY WRITE THIS FUNCTION FOR EXTRA CREDIT
 )
-
-
+; look at successors recursively and stop when one is on open list
 
 
 (defun state_on (state lst)
@@ -361,17 +360,18 @@
 (setf (get n 'arc-cost) arccost)
 (setf (get n 'cost-best-to-state) cost-of-short-path)
 (setf (get n 'action) action)
-(adjust_open_list n open-closed)
+(setf (get open-closed 'open-list) (adjust_open_list n (get open-closed 'open-list)))
+open-closed
 )
-;-- ASK ABOUT SUCCESSOR FN
 
 (defun get_path_and_total_cost (node)
 ; node is a node in the graph
 ; return a list consisting of two elements: the path (in terms of actions) 
 ;    that was taken to get to node and the cost of that path
 ; YOU MUST WRITE THIS FUNCTION
-  (cond ((null node) (list 0))
-        (t (list (cons (get node 'action) (car (get_path_and_total_cost (get node 'parent)))) (+ (get node 'arc-cost) (cadr (get_path_and_total_cost (get node 'parent)))))))
+  (cond ((null (get node 'parent)) nil)
+        ((null (get (get node 'parent) 'parent)) (list (list (get node 'action)) (get node 'arc-cost)))
+        (t (list (cons (caar (get_path_and_total_cost (get node 'parent))) (list (get node 'action)))(+ (get node 'arc-cost) (cadr (get_path_and_total_cost (get node 'parent)))))))
   
 )  ; add this node's cost to the total
 ; -- ASK ABOUT FORMATTING
@@ -391,7 +391,7 @@
              (get_successors_pe node (cdr next-planet-list))))
   )
 )
-; -- make sure function def can be changed
+; -- ASK make sure function def can be changed - no optional parameters
 
 
 (defun get_cost (planet goal-planet means weight stops)

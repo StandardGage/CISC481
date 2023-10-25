@@ -375,7 +375,6 @@ open-closed
         (t (list (cons (caar (get_path_and_total_cost (get node 'parent))) (list (get node 'action)))(+ (get node 'arc-cost) (cadr (get_path_and_total_cost (get node 'parent)))))))
   
 )  ; add this node's cost to the total
-; -- ASK ABOUT FORMATTING
 
 
 (defun get_successors_PE (node)
@@ -398,7 +397,6 @@ open-closed
 
   (helper-func node (get (intern (get node 'state)) 'next-planet))
 )
-; -- ASK make sure function def can be changed - no optional parameters
 
 
 (defun get_cost (planet goal-planet means weight stops)
@@ -411,8 +409,6 @@ open-closed
           ((equal means 'TRANSPORTER) (round (+ (* 20 weight) (* 15 distance)))))
   )
 )
-; -- ask about why rounding is needed? 
-; -- needs testing
 
 
 

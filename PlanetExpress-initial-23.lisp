@@ -406,9 +406,9 @@ open-closed
          (planet2 (intern goal-planet))
          (distance (get_estimate_cost_to_goal_pe planet goal-planet))
   )
-    (cond ((equal means 'LASER) (+ (* 1000 weight) distance))
-          ((equal means 'ROCKET) (+ (* 75 stops) (* 10 distance) 500))
-          ((equal means 'TRANSPORTER) (+ (* 20 weight) (* 15 distance))))
+    (cond ((equal means 'LASER) (round (+ (* 1000 weight) distance)))
+          ((equal means 'ROCKET) (round (+ (* 75 stops) (* 10 distance) 500)))
+          ((equal means 'TRANSPORTER) (round (+ (* 20 weight) (* 15 distance)))))
   )
 )
 ; -- ask about why rounding is needed? 

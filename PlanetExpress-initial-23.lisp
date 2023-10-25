@@ -264,6 +264,15 @@
 ; update the properties of the node and its descendants
 ;   on open and closed lists
 ; ONLY WRITE THIS FUNCTION FOR EXTRA CREDIT
+  (setf (get n 'parent) parent)
+  (setf (get n 'arc-cost) arccost)
+  (setf (get n 'cost-best-to-state) cost-of-short-path)
+  (setf (get n 'action) action)
+  ;(setf (get open-closed 'closed-list) (adjust_open_list n (get open-closed 'closed-list)))
+  
+  ; get successors
+  ; loop through successors and use name to get node and update cost, get successors again
+  open-closed
 )
 ; look at successors recursively and stop when one is on open list
 
@@ -377,19 +386,25 @@ open-closed
 ; -- ASK ABOUT FORMATTING
 
 
-(defun get_successors_PE (node &optional (next-planet-list (get (intern (get node 'state)) 'next-planet)))
+(defun get_successors_PE (node)
 ; node is a node 
 ; return a list of the successors of the node, with each successor given as
 ;   a 4-tuple of the form (arc-cost current-planet next-planet means), such as 
 ;   (cost "mars" "venus" ROCKET) 
 ; YOU MUST WRITE THIS FUNCTION
 ;(break "in get_successors_PE")
-  (cond
+  
+
+  (defun helper-func (node next-planet-list)
+    (cond
     ((null next-planet-list) nil) ; Base case: if the list is empty, return nil
     ; Create an action tuple for the first planet in the next-planet list
     (t (cons `(,(get_cost (get node 'state) (caar next-planet-list) (cadar next-planet-list) (get node 'package-weight) (get node 'num-stops)) ,(get node 'state) ,(caar next-planet-list) ,(cadar next-planet-list)) 
-             (get_successors_pe node (cdr next-planet-list))))
+             (helper-func node (cdr next-planet-list))))
+    )
   )
+
+  (helper-func node (get (intern (get node 'state)) 'next-planet))
 )
 ; -- ASK make sure function def can be changed - no optional parameters
 

@@ -264,15 +264,7 @@
 ; update the properties of the node and its descendants
 ;   on open and closed lists
 ; ONLY WRITE THIS FUNCTION FOR EXTRA CREDIT
-  (setf (get n 'parent) parent)
-  (setf (get n 'arc-cost) arccost)
-  (setf (get n 'cost-best-to-state) cost-of-short-path)
-  (setf (get n 'action) action)
-  ;(setf (get open-closed 'closed-list) (adjust_open_list n (get open-closed 'closed-list)))
   
-  ; get successors
-  ; loop through successors and use name to get node and update cost, get successors again
-  open-closed
 )
 ; look at successors recursively and stop when one is on open list
 

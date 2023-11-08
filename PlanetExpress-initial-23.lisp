@@ -359,8 +359,11 @@
 ; YOU MUST WRITE THIS FUNCTION
 (setf (get n 'parent) parent)
 (setf (get n 'arc-cost) arccost)
-(setf (get n 'cost-best-to-state) cost-of-short-path)
+(setf (get n 'cost-best-path-to-state) cost-of-short-path)
+(setf (get  n `cost-estimate-start-to-goal)
+        (+ cost-of-short-path (get n 'cost-estimate-state-to-goal)))
 (setf (get n 'action) action)
+(setf (get n 'num-stops) (+ 1 (get n 'num-stops)))
 (setf (get open-closed 'open-list) (adjust_open_list n (get open-closed 'open-list)))
 open-closed
 )
@@ -372,7 +375,7 @@ open-closed
 ; YOU MUST WRITE THIS FUNCTION
   (cond ((null (get node 'parent)) nil)
         ((null (get (get node 'parent) 'parent)) (list (list (get node 'action)) (get node 'arc-cost)))
-        (t (list (cons (caar (get_path_and_total_cost (get node 'parent))) (list (get node 'action)))(+ (get node 'arc-cost) (cadr (get_path_and_total_cost (get node 'parent)))))))
+        (t (list (append (car (get_path_and_total_cost (get node 'parent))) (list (get node 'action)))(+ (get node 'arc-cost) (cadr (get_path_and_total_cost (get node 'parent)))))))
   
 )  ; add this node's cost to the total
 

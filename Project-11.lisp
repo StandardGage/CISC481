@@ -208,11 +208,15 @@
 
 ; loop through instances
 ; add instance to corresponding class property
+; adds items to cl-symbol twice if function is ran twice
     (cond ((null instances) nil)
           ((null (get cl-symbol (get (car instances) 'TYPE?))) (setf (get cl-symbol (get (car instances) 'TYPE?)) (list (car instances))))
-          (t (append (car instances) (get cl-symbol (get (car instances) 'TYPE?)))
-          (collect_examples_by_class cl-symbol (cdr instances)))
+          (t (setf (get cl-symbol (get (car instances) 'TYPE?)) (cons (car instances) (get cl-symbol (get (car instances) 'TYPE?)))))
     )
+    (cond ((null instances) nil)
+          (t (collect_examples_by_class cl-symbol (cdr instances)))
+    )
+    cl-symbol
   )
 
 (defun get_stratified_set (class-symbol percent)

@@ -219,12 +219,38 @@
     cl-symbol
   )
 
-(defun get_stratified_set (class-symbol percent)
+;(defun get_stratified_set (class-symbol percent)
 ; class-symbol has the class values as its properties
 ; returns percent of the overall dataset stratified by class value
 ; includes at least 1 instance from each class
 ; YOU MUST WRITE THIS FUNCTION  
- )
+
+  
+ ;)
+
+ (defun get-stratified-set (class-symbol percent)
+  (process-class class-symbol percent 1))
+
+(defun process-class (class-symbol percent class)
+  (if (> class 7)
+      nil
+      (let* ((instances (get class-symbol class))
+             (required (max 1 (floor (* percent (length instances)))))
+             (selected (select-random instances required)))
+        (append selected (process-class class-symbol percent (1+ class))))))
+
+(defun select-random (list n)
+  (if (or (<= n 0) (null list))
+      nil
+      (let ((index (random (length list))))
+        (cons (nth index list) 
+              (select-random (remove-nth list index) (1- n))))))
+
+(defun remove-nth (list n)
+  (if (= n 0)
+      (cdr list)
+      (cons (car list) (remove-nth (cdr list) (1- n)))))
+
 
 
   (defun testing_23 (tree testcases)
@@ -232,11 +258,16 @@
 ; tree is a decision tree  
 ; returns the number of instances in testcases that are classified correctly
 ; YOU MUST WRITE THIS FUNCTION
+  (cond ((null testcases) 0)
+        ((= (get (car testcases) 'TYPE?) (classify (car testcases) tree)) (+ 1 (testing_23 tree (cdr testcases))))
+        (t (+ 0 (cdr testcases)))
+  )
 )
 
 
 
 (defun holdout_test (dataset percent class-symbol)
+0
 ; dataset is the overall dataset
 ; percent is a decimal number between .01 and .99 specifying
 ;   the percent of dataset that should be used for training
@@ -252,6 +283,7 @@
 )
 
   (defun repeated_holdout_test (dataset percent n class-symbol)
+  0
 ; dataset is the overall dataset
 ; percent is a decimal number between .01 and .99 specifying
 ;   the percent of dataset that should be used for training

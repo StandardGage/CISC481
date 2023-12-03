@@ -35,7 +35,7 @@
       (terpri)
       )
 
-(defun get_instances_in_class (stratified-list class)
+(defun get_instances_in_class (stratified-list class) ; gets instances if their TYPE? property matches class
       (cond ((null stratified-list) nil)
             ((= (get (car stratified-list) 'TYPE?) class) (cons (car stratified-list) (get_instances_in_class (cdr stratified-list) class)))
             (t (get_instances_in_class (cdr stratified-list) class))

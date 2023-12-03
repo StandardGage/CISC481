@@ -228,7 +228,7 @@
   
  ;)
 
- (defun get-stratified-set (class-symbol percent)
+ (defun get_stratified_set (class-symbol percent)
   (process-class class-symbol percent 1))
 
 (defun process-class (class-symbol percent class)
@@ -267,7 +267,6 @@
 
 
 (defun holdout_test (dataset percent class-symbol)
-0
 ; dataset is the overall dataset
 ; percent is a decimal number between .01 and .99 specifying
 ;   the percent of dataset that should be used for training
@@ -280,6 +279,10 @@
 ;     that were not used for training, the second element is the training set,
 ;     and the third element is the test set
 ; YOU MUST WRITE THIS FUNCTION
+  (let* ((train (get_stratified_set class-symbol percent))
+        (tree (id3 dataset *att-class* *attributes*))
+        (test (set-difference dataset train)))
+    (list (/ (testing_23 tree test) (list-length test)) train test)) ; confused about first part
 )
 
   (defun repeated_holdout_test (dataset percent n class-symbol)

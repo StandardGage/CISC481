@@ -209,14 +209,18 @@
 ; loop through instances
 ; add instance to corresponding class property
 ; adds items to cl-symbol twice if function is ran twice
+    (defun collect-helper (cl-symbol instances)
     (cond ((null instances) nil)
           ((null (get cl-symbol (get (car instances) 'TYPE?))) (setf (get cl-symbol (get (car instances) 'TYPE?)) (list (car instances))))
           (t (setf (get cl-symbol (get (car instances) 'TYPE?)) (cons (car instances) (get cl-symbol (get (car instances) 'TYPE?)))))
     )
     (cond ((null instances) nil)
-          (t (collect_examples_by_class cl-symbol (cdr instances)))
+          (t (collect-helper cl-symbol (cdr instances)))
     )
     cl-symbol
+    )
+    (setf (symbol-plist cl-symbol) nil) ; clears symbol from any past properties
+    (collect-helper cl-symbol instances)
   )
 
 ;(defun get_stratified_set (class-symbol percent)
@@ -258,10 +262,18 @@
 ; tree is a decision tree  
 ; returns the number of instances in testcases that are classified correctly
 ; YOU MUST WRITE THIS FUNCTION
-  (cond ((null testcases) 0)
-        ((= (get (car testcases) 'TYPE?) (classify (car testcases) tree)) (+ 1 (testing_23 tree (cdr testcases))))
-        (t (+ 0 (cdr testcases)))
+  (defun test_helper (testcases count)
+      (cond
+        ((null testcases) count)
+        (t (let* ((case (car testcases))
+                  (predicted (classify case tree))
+                  (actual (get case 'TYPE?)))
+          (test_helper (cdr testcases) (cond ((null predicted) count) ((= predicted actual) (1+ count)) (t count)))
+          )
+        )
+      )
   )
+  (test_helper testcases 0)
 )
 
 
@@ -280,13 +292,12 @@
 ;     and the third element is the test set
 ; YOU MUST WRITE THIS FUNCTION
   (let* ((train (get_stratified_set class-symbol percent))
-        (tree (id3 dataset *att-class* *attributes*))
+        (tree (id3 train *att-class* *attributes*))
         (test (set-difference dataset train)))
-    (list (/ (testing_23 tree test) (list-length test)) train test)) ; confused about first part
+    (list (float (/ (testing_23 tree test) (list-length test))) train test))
 )
 
   (defun repeated_holdout_test (dataset percent n class-symbol)
-  0
 ; dataset is the overall dataset
 ; percent is a decimal number between .01 and .99 specifying
 ;   the percent of dataset that should be used for training
@@ -298,6 +309,16 @@
 ;     element is a list of the success rates on each of the n
 ;     individual runs    
 ; YOU MUST WRITE THIS FUNCTION
+    (defun holdout_helper (dataset percent n class-symbol average rates)
+      (let* ((holdout (holdout_test dataset percent class-symbol))
+              (new_avg (+ (car holdout) average))
+              (new_list (append rates (list (car holdout)))))
+        (cond ((= 1 n) (list new_avg new_list))
+              (t (holdout_helper dataset percent (1- n) class-symbol new_avg new_list)))
+    
+    ))
+    (let ((holdout (holdout_helper dataset percent n class-symbol 0 (list nil))))
+      (list (/ (car holdout) n) (cdadr holdout)))
 )
 
 
